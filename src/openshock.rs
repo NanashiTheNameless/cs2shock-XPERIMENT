@@ -98,13 +98,13 @@ pub async fn post(config: Arc<RwLock<Config>>, op: OpenShockOp) -> Result<i32, S
     };
 
     // Clamp duration to valid range (300-65535 milliseconds)
-    let duration_ms = std::cmp::max(300, std::cmp::min(65535, duration * 1000));
+    let duration_ms = (duration * 1000).clamp(300, 65535);
 
     let body = OpenShockRequest {
         shocks: vec![Control {
             id: config.shocker_id.clone(),
             control_type: control_type.to_string(),
-            intensity: std::cmp::max(0, std::cmp::min(100, intensity)),
+            intensity: intensity.clamp(0, 100),
             duration: duration_ms,
         }],
     };

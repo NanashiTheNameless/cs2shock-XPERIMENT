@@ -28,7 +28,7 @@ pub async fn run(config: Arc<RwLock<Config>>) {
     let _ = eframe::run_native(
         "CS2 Shock",
         options,
-        Box::new(|_cc| Box::new(MyApp { config, changes })),
+        Box::new(|_cc| Ok(Box::new(MyApp { config, changes }))),
     );
 }
 
@@ -94,14 +94,14 @@ impl eframe::App for MyApp {
                 ui.add(
                     DragValue::new(&mut self.changes.min_intensity)
                         .speed(1)
-                        .clamp_range(0..=self.changes.max_intensity)
+                        .range(0..=self.changes.max_intensity)
                         .prefix("Min "),
                 )
                 .labelled_by(indensity_label.id);
                 ui.add(
                     DragValue::new(&mut self.changes.max_intensity)
                         .speed(1)
-                        .clamp_range(self.changes.min_intensity..=100)
+                        .range(self.changes.min_intensity..=100)
                         .prefix("Max "),
                 )
                 .labelled_by(indensity_label.id);
@@ -111,14 +111,14 @@ impl eframe::App for MyApp {
                 ui.add(
                     DragValue::new(&mut self.changes.min_duration)
                         .speed(1)
-                        .clamp_range(0..=self.changes.max_duration)
+                        .range(0..=self.changes.max_duration)
                         .prefix("Min "),
                 )
                 .labelled_by(duration_label.id);
                 ui.add(
                     DragValue::new(&mut self.changes.max_duration)
                         .speed(1)
-                        .clamp_range(self.changes.min_duration..=15)
+                        .range(self.changes.min_duration..=15)
                         .prefix("Max "),
                 )
                 .labelled_by(duration_label.id);

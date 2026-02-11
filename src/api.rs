@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use axum::{extract::State, http::StatusCode, routing::post, Json, Router};
 use log::info;
-use rand::{rngs::StdRng, Rng, SeedableRng};
 use tokio::sync::{Mutex, RwLock};
 
 use crate::{
@@ -111,9 +110,13 @@ async fn read_data(State(state): State<AppState>, Json(payload): Json<Payload>) 
 
                 match config.shock_mode {
                     config::ShockMode::Random => {
-                        let mut rng = StdRng::from_entropy();
-                        let intensity = rng.gen_range(config.min_intensity..=config.max_intensity);
-                        let duration = rng.gen_range(config.min_duration..=config.max_duration);
+                        use rand::RngExt;
+                        let (intensity, duration) = {
+                            let mut rng = rand::rng();
+                            let intensity = rng.random_range(config.min_intensity..=config.max_intensity);
+                            let duration = rng.random_range(config.min_duration..=config.max_duration);
+                            (intensity, duration)
+                        };
 
                         openshock::shock(state.config.clone(), intensity, duration).await;
                     }
