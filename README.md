@@ -12,7 +12,7 @@ There are also two options to beep whenever a match starts, and whenever a round
 
 ## Usage
 
-1. Find you install directiory, do to so go to steam, right click on Counter-Strike 2, go to `Manage > Browse Local Files`.
+1. Find your install directory, to do so go to steam, right click on Counter-Strike 2, go to `Manage > Browse Local Files`.
 2. Put `gamestate_integration_cs2shock.cfg` in the `game/csgo/cfg` folder. (NOT THE `csgo/cfg` folder). You can now close this folder.
 3. You can now run `cs2shock.exe`.
 
