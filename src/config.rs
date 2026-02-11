@@ -69,7 +69,7 @@ impl Config {
             return false;
         }
 
-        return true;
+        true
     }
 
     pub fn write_to_file(&self, path: &str) {
@@ -78,7 +78,7 @@ impl Config {
             .write(true)
             .truncate(true)
             .open(path)
-            .expect(format!("Failed to open config file, {}", path).as_str());
+            .unwrap_or_else(|_| panic!("Failed to open config file, {}", path));
 
         let json = serde_json::to_string_pretty(self).expect("Failed to serialize config");
 

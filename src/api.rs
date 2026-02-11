@@ -56,11 +56,12 @@ async fn read_data(State(state): State<AppState>, Json(payload): Json<Payload>) 
     }
 
     if let Some(round) = payload.round {
-        if game_state.round_phase == RoundPhase::Freezetime && round.phase == RoundPhase::Live {
-            if config.beep_on_round_start {
-                info!("Round started");
-                openshock::beep(state.config.clone(), 1).await;
-            }
+        if game_state.round_phase == RoundPhase::Freezetime
+            && round.phase == RoundPhase::Live
+            && config.beep_on_round_start
+        {
+            info!("Round started");
+            openshock::beep(state.config.clone(), 1).await;
         }
 
         game_state.round_phase = round.phase;
