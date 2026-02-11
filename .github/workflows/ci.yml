@@ -101,3 +101,20 @@ jobs:
 
       - name: Build release
         run: cargo build --release --verbose
+
+      - name: Create archive
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path release -Force
+          Copy-Item -Path "target/release/cs2shock.exe" -Destination "release/"
+          Copy-Item -Path "README.md" -Destination "release/"
+          Copy-Item -Path "config.json" -Destination "release/"
+          Copy-Item -Path "gamestate_integration_cs2shock.cfg" -Destination "release/"
+          Compress-Archive -Path release/* -DestinationPath cs2shock-windows-x64.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows x64
+          path: cs2shock-windows-x64.zip
+          retention-days: 30

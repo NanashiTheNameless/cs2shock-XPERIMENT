@@ -73,6 +73,8 @@ jobs:
     name: Create Release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -91,24 +93,13 @@ jobs:
             echo "version=dev-$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
+      - name: Deploy Release
+        uses: NanashiTheNameless/deploy-nightly@master
         with:
-          name: Release ${{ steps.get_version.outputs.version }}
-          draft: false
-          prerelease: false
-          generate_release_notes: true
-          body: |
-            ## CS2Shock ${{ steps.get_version.outputs.version }}
-            
-            ### Installation
-            1. Download the appropriate binary for your platform
-            2. Extract the archive
-            3. Follow the instructions in the README.md
-            
-            ### Platform
-            - Windows x64 only (because who plays CS2 on Linux or Mac anyway?)
-            
-            ⚠️ **WARNING**: This code was written by AI. Use at your own risk. See README for full disclaimer.
-          files: |
-            artifacts/**/*
+          upload_url: https://uploads.github.com/repos/NanashiTheNameless/cs2shock-XPERIMENT/releases/285366245/assets{?name,label}
+          release_id: 285366245
+          asset_path: ./artifacts/Windows\ x64/cs2shock-windows-x64.zip
+          asset_name: cs2shock_windows-x64-nightly-$$.zip
+          asset_content_type: application/zip
+          max_releases: 7
+          ignore_hash: true
