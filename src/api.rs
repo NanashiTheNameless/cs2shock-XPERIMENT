@@ -113,8 +113,10 @@ async fn read_data(State(state): State<AppState>, Json(payload): Json<Payload>) 
                         use rand::RngExt;
                         let (intensity, duration) = {
                             let mut rng = rand::rng();
-                            let intensity = rng.random_range(config.min_intensity..=config.max_intensity);
-                            let duration = rng.random_range(config.min_duration..=config.max_duration);
+                            let intensity =
+                                rng.random_range(config.min_intensity..=config.max_intensity);
+                            let duration =
+                                rng.random_range(config.min_duration..=config.max_duration);
                             (intensity, duration)
                         };
 
