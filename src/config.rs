@@ -18,9 +18,8 @@ pub struct Config {
     pub max_intensity: i32,
     pub beep_on_match_start: bool,
     pub beep_on_round_start: bool,
-    pub username: String,
-    pub code: String,
-    pub apikey: String,
+    pub shocker_id: String,
+    pub api_token: String,
 }
 
 impl Default for Config {
@@ -33,9 +32,8 @@ impl Default for Config {
             max_intensity: 1,
             beep_on_match_start: false,
             beep_on_round_start: false,
-            username: String::new(),
-            code: String::new(),
-            apikey: String::new(),
+            shocker_id: String::new(),
+            api_token: String::new(),
         }
     }
 }

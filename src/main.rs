@@ -2,7 +2,7 @@ mod api;
 mod config;
 mod gamestateintegration;
 mod gui;
-mod pishock;
+mod openshock;
 
 use std::{
     fs::File,
