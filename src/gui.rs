@@ -7,7 +7,7 @@ use tokio::sync::RwLock;
 
 use crate::{
     config::{Config, ShockMode},
-    pishock,
+    openshock,
 };
 
 pub async fn run(config: Arc<RwLock<Config>>) {
@@ -43,33 +43,23 @@ impl eframe::App for MyApp {
             ui.heading("CS2 Shock");
 
             ui.horizontal(|ui: &mut egui::Ui| {
-                let mut username_label_id = Id::NULL;
+                let mut shocker_id_label_id = Id::NULL;
                 ui.horizontal(|ui| {
                     ui.set_width(70.0);
-                    username_label_id = ui.label("Username: ").id;
+                    shocker_id_label_id = ui.label("Shocker ID: ").id;
                 });
-                ui.text_edit_singleline(&mut self.changes.username)
-                    .labelled_by(username_label_id);
+                ui.text_edit_singleline(&mut self.changes.shocker_id)
+                    .labelled_by(shocker_id_label_id);
             });
 
             ui.horizontal(|ui: &mut egui::Ui| {
-                let mut sharecode_label_id = Id::NULL;
+                let mut api_token_label_id = Id::NULL;
                 ui.horizontal(|ui| {
                     ui.set_width(70.0);
-                    sharecode_label_id = ui.label("Share code: ").id;
+                    api_token_label_id = ui.label("API Token: ").id;
                 });
-                ui.text_edit_singleline(&mut self.changes.code)
-                    .labelled_by(sharecode_label_id);
-            });
-
-            ui.horizontal(|ui: &mut egui::Ui| {
-                let mut apikey_label_id = Id::NULL;
-                ui.horizontal(|ui| {
-                    ui.set_width(70.0);
-                    apikey_label_id = ui.label("API key: ").id;
-                });
-                ui.text_edit_singleline(&mut self.changes.apikey)
-                    .labelled_by(apikey_label_id);
+                ui.text_edit_singleline(&mut self.changes.api_token)
+                    .labelled_by(api_token_label_id);
             });
 
             ui.vertical_centered_justified(|ui| {
@@ -79,7 +69,7 @@ impl eframe::App for MyApp {
                     info!(target: "GUI", "Sending test beep");
                     let c = self.config.clone();
                     tokio::spawn(async move {
-                        pishock::beep(c, 1).await;
+                        openshock::beep(c, 1).await;
                     });
                 }
             });

@@ -8,12 +8,12 @@ use tokio::sync::{Mutex, RwLock};
 use crate::{
     config::{self, Config},
     gamestateintegration::{MapPhase, Payload, RoundPhase},
-    pishock, AppState, GameState, PlayerState,
+    openshock, AppState, GameState, PlayerState,
 };
 
 pub async fn run(config: Arc<RwLock<Config>>) {
     info!("Sending test beep");
-    pishock::beep(config.clone(), 1).await;
+    openshock::beep(config.clone(), 1).await;
 
     let state = AppState {
         game_state: Arc::from(Mutex::from(GameState::default())),
@@ -45,7 +45,7 @@ async fn read_data(State(state): State<AppState>, Json(payload): Json<Payload>) 
             info!("Match started");
 
             if config.beep_on_match_start {
-                pishock::beep(state.config.clone(), 2).await;
+                openshock::beep(state.config.clone(), 2).await;
             }
 
             // Reset game state to default
@@ -59,7 +59,7 @@ async fn read_data(State(state): State<AppState>, Json(payload): Json<Payload>) 
         if game_state.round_phase == RoundPhase::Freezetime && round.phase == RoundPhase::Live {
             if config.beep_on_round_start {
                 info!("Round started");
-                pishock::beep(state.config.clone(), 1).await;
+                openshock::beep(state.config.clone(), 1).await;
             }
         }
 
@@ -84,9 +84,9 @@ async fn read_data(State(state): State<AppState>, Json(payload): Json<Payload>) 
 
                 let diff = player_state.health - player.state.health;
 
-                let res = pishock::post(
+                let res = openshock::post(
                     &config,
-                    pishock::PiShockOp::Vibrate {
+                    openshock::OpenShockOp::Vibrate {
                         intensity: diff,
                         duration: 1,
                     },
@@ -104,7 +104,7 @@ async fn read_data(State(state): State<AppState>, Json(payload): Json<Payload>) 
                 // Died
 
                 // Github Copilot is based
-                // let res = pishock::post(&api_state, pishock::PiShockOp::Shock { intensity: 100, duration: 1 }).await;
+                // let res = openshock::post(&api_state, openshock::OpenShockOp::Shock { intensity: 100, duration: 1 }).await;
 
                 info!("Player died, shocking");
 
@@ -114,7 +114,7 @@ async fn read_data(State(state): State<AppState>, Json(payload): Json<Payload>) 
                         let intensity = rng.gen_range(config.min_intensity..=config.max_intensity);
                         let duration = rng.gen_range(config.min_duration..=config.max_duration);
 
-                        pishock::shock(state.config.clone(), intensity, duration).await;
+                        openshock::shock(state.config.clone(), intensity, duration).await;
                     }
                     config::ShockMode::LastHitPercentage => {
                         let intensity = (player_state.health as f32 / 100.0
@@ -124,7 +124,7 @@ async fn read_data(State(state): State<AppState>, Json(payload): Json<Payload>) 
                             * config.max_duration as f32)
                             as i32;
 
-                        pishock::shock(state.config.clone(), intensity, duration).await;
+                        openshock::shock(state.config.clone(), intensity, duration).await;
                     }
                 };
             }
