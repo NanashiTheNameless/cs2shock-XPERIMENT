@@ -77,7 +77,7 @@ pub async fn beep(config: Arc<RwLock<Config>>, duration: i32) {
 
 pub async fn post(config: Arc<RwLock<Config>>, op: OpenShockOp) -> Result<i32, String> {
     let config = config.read().await;
-    
+
     // Convert duration from seconds to milliseconds
     let (endpoint, body) = match op {
         OpenShockOp::Beep { duration } => {
@@ -87,14 +87,20 @@ pub async fn post(config: Arc<RwLock<Config>>, op: OpenShockOp) -> Result<i32, S
             };
             ("beep", body)
         }
-        OpenShockOp::Vibrate { intensity, duration } => {
+        OpenShockOp::Vibrate {
+            intensity,
+            duration,
+        } => {
             let body = OpenShockRequest {
                 intensity,
                 duration: duration * 1000, // Convert to milliseconds
             };
             ("vibrate", body)
         }
-        OpenShockOp::Shock { intensity, duration } => {
+        OpenShockOp::Shock {
+            intensity,
+            duration,
+        } => {
             let body = OpenShockRequest {
                 intensity,
                 duration: duration * 1000, // Convert to milliseconds
@@ -122,7 +128,10 @@ pub async fn post(config: Arc<RwLock<Config>>, op: OpenShockOp) -> Result<i32, S
                 return Ok(res.status().as_u16() as i32);
             } else {
                 let status = res.status().as_u16();
-                let error_text = res.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+                let error_text = res
+                    .text()
+                    .await
+                    .unwrap_or_else(|_| "Unknown error".to_string());
                 return Err(format!(
                     "Failed to post to OpenShock: {} - {}",
                     status, error_text
