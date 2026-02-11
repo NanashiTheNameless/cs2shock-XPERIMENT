@@ -1,7 +1,7 @@
 ﻿# CS2shock
 
-[![CI](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT//actions/workflows/ci.yml/badge.svg)](https://github.com/VolcanoCookies/cs2shock/actions/workflows/ci.yml)
-[![Release](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT//actions/workflows/release.yml/badge.svg)](https://github.com/VolcanoCookies/cs2shock/actions/workflows/release.yml)
+[![CI](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT/actions/workflows/ci.yml/badge.svg)](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT/actions/workflows/ci.yml)
+[![Release](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT/actions/workflows/release.yml/badge.svg)](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT/actions/workflows/release.yml)
 
 ---
 
