@@ -1,6 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone)]
+#[allow(dead_code)]
 pub struct Map {
     pub mode: String,
     pub name: String,
@@ -32,6 +33,7 @@ pub enum RoundPhase {
 }
 
 #[derive(Deserialize, Debug, Clone, Copy)]
+#[allow(dead_code)]
 pub struct PlayerState {
     pub health: i32,
     pub armor: i32,
@@ -46,6 +48,7 @@ pub struct PlayerState {
 }
 
 #[derive(Deserialize, Debug, Clone, Copy)]
+#[allow(dead_code)]
 pub struct PlayerMatchStats {
     pub kills: i32,
     pub assists: i32,
@@ -55,6 +58,7 @@ pub struct PlayerMatchStats {
 }
 
 #[derive(Deserialize, Debug, Clone)]
+#[allow(dead_code)]
 pub struct Player {
     pub steamid: String,
     pub name: String,
@@ -63,6 +67,7 @@ pub struct Player {
 }
 
 #[derive(Deserialize, Debug, Clone)]
+#[allow(dead_code)]
 pub struct Provider {
     pub name: String,
     pub appid: i32,

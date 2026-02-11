@@ -30,6 +30,7 @@ pub async fn shock(config: Arc<RwLock<Config>>, intensity: i32, duration: i32) {
     }
 }
 
+#[allow(dead_code)]
 pub async fn vibrate(config: Arc<RwLock<Config>>, intensity: i32, duration: i32) {
     debug!(target: "OpenShock API",
         "Sending vibrate: intensity={}, duration={}s", intensity, duration
@@ -125,22 +126,20 @@ pub async fn post(config: Arc<RwLock<Config>>, op: OpenShockOp) -> Result<i32, S
     match res {
         Ok(res) => {
             if res.status().is_success() {
-                return Ok(res.status().as_u16() as i32);
+                Ok(res.status().as_u16() as i32)
             } else {
                 let status = res.status().as_u16();
                 let error_text = res
                     .text()
                     .await
                     .unwrap_or_else(|_| "Unknown error".to_string());
-                return Err(format!(
+                Err(format!(
                     "Failed to post to OpenShock: {} - {}",
                     status, error_text
-                ));
+                ))
             }
         }
-        Err(e) => {
-            return Err(e.to_string());
-        }
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -152,6 +151,7 @@ struct OpenShockRequest {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub enum OpenShockOp {
     Beep { duration: i32 },
     Vibrate { intensity: i32, duration: i32 },
