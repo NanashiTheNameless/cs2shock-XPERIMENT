@@ -98,7 +98,7 @@ jobs:
         with:
           upload_url: https://uploads.github.com/repos/NanashiTheNameless/cs2shock-XPERIMENT/releases/285366245/assets{?name,label}
           release_id: 285366245
-          asset_path: ./artifacts/Windows\ x64/cs2shock-windows-x64.zip
+          asset_path: "./artifacts/Windows x64/cs2shock-windows-x64.zip"
           asset_name: cs2shock_windows-x64-nightly-$$.zip
           asset_content_type: application/zip
           max_releases: 7
