@@ -1,1 +1,22 @@
+# Rust build artifacts
 /target
+Cargo.lock
+
+# Config files with user credentials
+# Keep the example config.json in the repo but ignore any local modifications
+# config.json
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Release artifacts
+*.zip
+*.tar.gz
+
+# Logs
+*.log

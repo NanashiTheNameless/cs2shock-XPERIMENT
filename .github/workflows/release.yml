@@ -1,0 +1,162 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - name: Windows x64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            binary: cs2shock.exe
+            archive: cs2shock-windows-x64.zip
+            
+          - name: Linux x64
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            binary: cs2shock
+            archive: cs2shock-linux-x64.tar.gz
+            
+          - name: macOS x64
+            os: macos-latest
+            target: x86_64-apple-darwin
+            binary: cs2shock
+            archive: cs2shock-macos-x64.tar.gz
+            
+          - name: macOS ARM64
+            os: macos-latest
+            target: aarch64-apple-darwin
+            binary: cs2shock
+            archive: cs2shock-macos-arm64.tar.gz
+
+    runs-on: ${{ matrix.platform.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform.target }}
+
+      - name: Install Linux dependencies
+        if: matrix.platform.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev
+
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-registry-
+
+      - name: Cache cargo index
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-git-
+
+      - name: Cache target directory
+        uses: actions/cache@v4
+        with:
+          path: target
+          key: ${{ runner.os }}-${{ matrix.platform.target }}-target-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.platform.target }}-target-
+
+      - name: Build release binary
+        run: cargo build --release --target ${{ matrix.platform.target }}
+
+      - name: Create archive (Windows)
+        if: matrix.platform.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path release -Force
+          Copy-Item -Path "target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary }}" -Destination "release/"
+          Copy-Item -Path "README.md" -Destination "release/"
+          Copy-Item -Path "config.json" -Destination "release/"
+          Copy-Item -Path "gamestate_integration_cs2shock.cfg" -Destination "release/"
+          Compress-Archive -Path release/* -DestinationPath ${{ matrix.platform.archive }}
+
+      - name: Create archive (Unix)
+        if: matrix.platform.os != 'windows-latest'
+        run: |
+          mkdir -p release
+          cp target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary }} release/
+          cp README.md release/
+          cp config.json release/
+          cp gamestate_integration_cs2shock.cfg release/
+          tar -czf ${{ matrix.platform.archive }} -C release .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform.name }}
+          path: ${{ matrix.platform.archive }}
+          retention-days: 7
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          else
+            echo "version=dev-$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          body: |
+            ## CS2Shock ${{ steps.get_version.outputs.version }}
+            
+            ### Installation
+            1. Download the appropriate binary for your platform
+            2. Extract the archive
+            3. Follow the instructions in the README.md
+            
+            ### Platforms
+            - Windows x64
+            - Linux x64
+            - macOS Intel (x64)
+            - macOS Apple Silicon (ARM64)
+            
+            ⚠️ **WARNING**: This code was written by AI. Use at your own risk. See README for full disclaimer.
+          files: |
+            artifacts/**/*
