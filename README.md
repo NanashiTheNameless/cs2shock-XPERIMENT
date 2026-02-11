@@ -1,4 +1,9 @@
-﻿# CS2shock
+﻿# CS2shock-XPERIMENT OpenShock Support
+
+# THIS CODE IS UNAFFILIATED WITH THE REAL VERSION BY VolcanoCookies
+# THIS IS A MODIFIED VERSION WITH THE PURPOSE OF USING OpenShock INSTEAD OF PiShock
+# THEIR CODE IS NOT AS SHIT AS THE CODE IN THIS REPO (I THINK)
+# THIS CODE IS A JERRYRIGED VERSION AND IS EXPERIMENTAL AND COMES WITH **NO SUPPORT**
 
 [![CI](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT/actions/workflows/ci.yml/badge.svg)](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT/actions/workflows/ci.yml)
 [![Release](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT/actions/workflows/release.yml/badge.svg)](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT/actions/workflows/release.yml)
