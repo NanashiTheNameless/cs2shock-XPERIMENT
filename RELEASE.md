@@ -11,7 +11,7 @@ Runs on every push to `main` or `dev` branches, and on pull requests.
 **What it does:**
 - Runs `cargo fmt` to check code formatting
 - Runs `cargo clippy` to check for common mistakes
-- Builds the project on Linux, Windows, and macOS
+- Builds the project on Windows
 - Runs all tests
 - Creates release builds to verify they compile
 
@@ -24,14 +24,10 @@ Runs on every push to `main` or `dev` branches, and on pull requests.
 Creates official releases with binaries for all supported platforms.
 
 **What it does:**
-- Builds release binaries for:
-  - Windows x64
-  - Linux x64
-  - macOS x64 (Intel)
-  - macOS ARM64 (Apple Silicon)
+- Builds release binary for Windows x64
 - Creates a GitHub release
-- Uploads all binaries to the release
-- Includes `README.md`, `config.json`, and `gamestate_integration_cs2shock.cfg` in each archive
+- Uploads the binary to the release
+- Includes `README.md`, `config.json`, and `gamestate_integration_cs2shock.cfg` in the archive
 
 **Triggered by:**
 - Pushing a tag starting with `v` (e.g., `v1.1.0`)
@@ -107,23 +103,17 @@ cargo build --release
 
 ## Platform-Specific Notes
 
-### Linux
-The CI builds on Ubuntu and requires GTK3 and X11 libraries. These are installed automatically in the workflow.
-
-### macOS
-- Builds for both Intel (x64) and Apple Silicon (ARM64)
-- Cross-compilation is handled automatically by the workflow
-
 ### Windows
 - Builds using MSVC toolchain
-- Creates a `.zip` archive instead of `.tar.gz`
+- Creates a `.zip` archive
+- This is the only supported platform because CS2 is a Windows game
 
 ## Troubleshooting
 
-### Build fails on one platform
+### Build fails
 - Check the Actions log for specific errors
 - Ensure all dependencies are properly listed in `Cargo.toml`
-- Test locally if you have access to that platform
+- Test locally on Windows
 
 ### Release not created
 - Make sure the tag starts with `v`
@@ -133,4 +123,4 @@ The CI builds on Ubuntu and requires GTK3 and X11 libraries. These are installed
 ### Binary doesn't work
 - Test the release build locally first: `cargo build --release`
 - Check that all runtime dependencies are documented
-- Verify the binary is properly linked for the target platform
+- Verify you're on Windows x64

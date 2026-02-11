@@ -6,12 +6,12 @@
 1. **`.github/workflows/ci.yml`** - Continuous Integration
    - Runs on every push and PR
    - Tests code formatting, linting, building, and tests
-   - Runs on Linux, Windows, and macOS
+   - Runs on Windows only
 
 2. **`.github/workflows/release.yml`** - Release Automation
    - Triggers on version tags (e.g., `v1.2.0`)
-   - Builds binaries for all platforms
-   - Creates GitHub releases with downloadable archives
+   - Builds binary for Windows x64
+   - Creates GitHub releases with downloadable archive
 
 ### Documentation
 3. **`RELEASE.md`** - Release process documentation
@@ -41,7 +41,7 @@
 Just push code to `main` or create a pull request. The CI will automatically:
 - ✅ Check code formatting
 - ✅ Run linter (clippy)
-- ✅ Build on all platforms
+- ✅ Build on Windows
 - ✅ Run tests
 
 ### For Releases
@@ -53,23 +53,22 @@ Just push code to `main` or create a pull request. The CI will automatically:
    git push origin v1.2.0
    ```
 4. GitHub Actions will automatically:
-   - Build for Windows, Linux, macOS (Intel & ARM)
+   - Build for Windows x64
    - Create a release
-   - Upload all binaries
+   - Upload the binary
 
 ## What Gets Built
 
-Each release includes binaries for:
+Each release includes a binary for:
 - **Windows x64** (`cs2shock-windows-x64.zip`)
-- **Linux x64** (`cs2shock-linux-x64.tar.gz`)
-- **macOS Intel** (`cs2shock-macos-x64.tar.gz`)
-- **macOS Apple Silicon** (`cs2shock-macos-arm64.tar.gz`)
 
-Each archive contains:
-- The compiled binary (`cs2shock` or `cs2shock.exe`)
+The archive contains:
+- The compiled binary (`cs2shock.exe`)
 - `README.md`
 - `config.json` (example configuration)
 - `gamestate_integration_cs2shock.cfg`
+
+*Linux and macOS support has been abandoned.*
 
 ## Next Steps
 
@@ -93,7 +92,7 @@ Each archive contains:
 ## Features
 
 ✨ **Automated builds** on every commit  
-✨ **Multi-platform support** (Windows, Linux, macOS)  
+✨ **Windows x64 support**  
 ✨ **Code quality checks** (formatting, linting)  
 ✨ **One-command releases** (just push a tag)  
 ✨ **Artifact caching** for faster builds  
