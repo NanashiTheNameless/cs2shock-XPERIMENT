@@ -103,3 +103,11 @@ jobs:
           asset_content_type: application/zip
           max_releases: 7
           ignore_hash: true
+
+      - name: Update release tag
+        uses: NanashiTheNameless/action-create-tag@main
+        with:
+          tag: "Nightly"
+          tag_exists_error: false
+          force_push_tag: true
+          message: "Nightly Auto Build"
