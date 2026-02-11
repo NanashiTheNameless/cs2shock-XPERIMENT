@@ -60,13 +60,12 @@ There are also two options to beep whenever a match starts, and whenever a round
 
 ## Download
 
-Pre-built binaries are available for Windows, Linux, and macOS in the [Releases](https://github.com/NanashiTheNameless/cs2shock-XPERIMENT/releases) page.
+Pre-built binaries are available for Windows in the [Releases](https://github.com/VolcanoCookies/cs2shock/releases) page.
 
-Download the appropriate version for your platform:
-- **Windows**: `cs2shock-windows-x64.zip`
-- **Linux**: `cs2shock-linux-x64.tar.gz`
-- **macOS Intel**: `cs2shock-macos-x64.tar.gz`
-- **macOS Apple Silicon**: `cs2shock-macos-arm64.tar.gz`
+Download:
+- **Windows x64**: `cs2shock-windows-x64.zip`
+
+*Linux and macOS support has been abandoned because let's be real, you're playing CS2 on Windows anyway.*
 
 ## Usage
 
