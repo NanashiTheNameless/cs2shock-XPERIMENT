@@ -79,46 +79,36 @@ pub async fn beep(config: Arc<RwLock<Config>>, duration: i32) {
 pub async fn post(config: Arc<RwLock<Config>>, op: OpenShockOp) -> Result<i32, String> {
     let config = config.read().await;
 
-    // Convert duration from seconds to milliseconds
-    let (endpoint, body) = match op {
-        OpenShockOp::Beep { duration } => {
-            let body = OpenShockRequest {
-                intensity: 0,
-                duration: duration * 1000, // Convert to milliseconds
-            };
-            ("beep", body)
-        }
-        OpenShockOp::Vibrate {
-            intensity,
-            duration,
-        } => {
-            let body = OpenShockRequest {
-                intensity,
-                duration: duration * 1000, // Convert to milliseconds
-            };
-            ("vibrate", body)
-        }
-        OpenShockOp::Shock {
-            intensity,
-            duration,
-        } => {
-            let body = OpenShockRequest {
-                intensity,
-                duration: duration * 1000, // Convert to milliseconds
-            };
-            ("shock", body)
-        }
+    let control_type = match op {
+        OpenShockOp::Beep { .. } => "Sound",
+        OpenShockOp::Vibrate { .. } => "Vibrate",
+        OpenShockOp::Shock { .. } => "Shock",
     };
 
-    let url = format!(
-        "https://api.openshock.app/2/shockers/{}/control/{}",
-        config.shocker_id, endpoint
-    );
+    let (intensity, duration) = match op {
+        OpenShockOp::Beep { duration } => (0, duration),
+        OpenShockOp::Vibrate { intensity, duration } => (intensity, duration),
+        OpenShockOp::Shock { intensity, duration } => (intensity, duration),
+    };
+
+    // Clamp duration to valid range (300-65535 milliseconds)
+    let duration_ms = std::cmp::max(300, std::cmp::min(65535, duration * 1000));
+
+    let body = OpenShockRequest {
+        shocks: vec![Control {
+            id: config.shocker_id.clone(),
+            control_type: control_type.to_string(),
+            intensity: std::cmp::max(0, std::cmp::min(100, intensity)),
+            duration: duration_ms,
+        }],
+    };
+
+    let url = "https://api.openshock.app/2/shockers/control";
 
     let res = reqwest::Client::new()
-        .post(&url)
-        .header("OpenShockToken", &config.api_token)
-        .header("User-Agent", "CS2Shock/1.1.0")
+        .post(url)
+        .header("X-API-Token", &config.api_token)
+        .header("User-Agent", "CS2Shock-XPERIMENT/1.1.1")
         .json(&body)
         .send()
         .await;
@@ -146,6 +136,15 @@ pub async fn post(config: Arc<RwLock<Config>>, op: OpenShockOp) -> Result<i32, S
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 struct OpenShockRequest {
+    shocks: Vec<Control>,
+}
+
+#[derive(Serialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+struct Control {
+    id: String,
+    #[serde(rename = "type")]
+    control_type: String,
     intensity: i32,
     duration: i32,
 }
