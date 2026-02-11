@@ -113,7 +113,7 @@ pub async fn post(config: Arc<RwLock<Config>>, op: OpenShockOp) -> Result<i32, S
 
     let res = reqwest::Client::new()
         .post(url)
-        .header("X-API-Token", &config.api_token)
+        .header("Open-Shock-Token", &config.api_token)
         .header("User-Agent", "CS2Shock-XPERIMENT/1.1.1")
         .json(&body)
         .send()
