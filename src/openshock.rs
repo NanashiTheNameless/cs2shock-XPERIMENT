@@ -87,8 +87,14 @@ pub async fn post(config: Arc<RwLock<Config>>, op: OpenShockOp) -> Result<i32, S
 
     let (intensity, duration) = match op {
         OpenShockOp::Beep { duration } => (0, duration),
-        OpenShockOp::Vibrate { intensity, duration } => (intensity, duration),
-        OpenShockOp::Shock { intensity, duration } => (intensity, duration),
+        OpenShockOp::Vibrate {
+            intensity,
+            duration,
+        } => (intensity, duration),
+        OpenShockOp::Shock {
+            intensity,
+            duration,
+        } => (intensity, duration),
     };
 
     // Clamp duration to valid range (300-65535 milliseconds)
