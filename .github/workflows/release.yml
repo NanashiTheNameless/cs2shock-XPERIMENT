@@ -77,7 +77,7 @@ jobs:
           asset_path: cs2shock-windows-x64.zip
           asset_name: cs2shock_windows-x64-nightly-$$.zip
           asset_content_type: application/zip
-          max_releases: 7
+          max_releases: 1
           ignore_hash: true
 
   release:
